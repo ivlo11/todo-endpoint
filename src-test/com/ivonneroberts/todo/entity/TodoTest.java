@@ -1,6 +1,6 @@
 package com.ivonneroberts.todo.entity;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ public class TodoTest {
 	{
 		Todo todo = new Todo();
 		todo.setId(1);
-		asserEquals(1, todo.getId());
+		assertEquals(1, todo.getId());
 	}
 
 }
