@@ -9,16 +9,13 @@ public class TodoTest {
 	@Test
 	public void testTodoService()
 	{
-		Todo todo = new Todo();
-		todo.setId(1);
+		Todo todo = new Todo(1, "My First Task");
 		assertEquals(1, todo.getId());
-		
-		todo.setMessage("My First Task");
 		assertEquals("My First Task", todo.getMessage());
-		
+		assertEquals(false, todo.getCompleted());
+
 		todo.setCompleted(true);
 		assertEquals(true, todo.getCompleted());
-
 	}
 
 }
