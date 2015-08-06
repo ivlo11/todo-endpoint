@@ -9,6 +9,7 @@ package com.ivonneroberts.todo.entity;
 public class Todo {
 
 	private int id;
+	private String message;
 
 	public void setId(int id) {
 		this.id = id;
@@ -19,13 +20,11 @@ public class Todo {
 	}
 
 	public void setMessage(String message) {
-		// TODO Auto-generated method stub
-		
+		this.message = message;
 	}
 
 	public String getMessage() {
-		// TODO Auto-generated method stub
-		return null;
+		return message;
 	}
 
 }
