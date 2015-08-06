@@ -8,13 +8,14 @@ package com.ivonneroberts.todo.entity;
  */
 public class Todo {
 
-	public void setId(int i) {
-		// TODO Auto-generated method stub
+	private int id;
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
 
 }
