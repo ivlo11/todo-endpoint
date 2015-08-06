@@ -10,7 +10,8 @@ public class TodoTest {
 	public void testTodoService()
 	{
 		Todo todo = new Todo();
-		assertTrue(todo != null);
+		todo.setId(1);
+		asserEquals(1, todo.getId());
 	}
 
 }
