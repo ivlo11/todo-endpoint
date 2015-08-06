@@ -10,6 +10,7 @@ public class Todo {
 
 	private int id;
 	private String message;
+	private boolean completed;
 
 	public void setId(int id) {
 		this.id = id;
@@ -25,6 +26,14 @@ public class Todo {
 
 	public String getMessage() {
 		return message;
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
+
+	public boolean getCompleted() {
+		return completed;
 	}
 
 }
