@@ -12,6 +12,11 @@ public class Todo {
 	private String message;
 	private boolean completed;
 
+	public Todo(int id, String message) {
+		setId(id);
+		setMessage(message);
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
