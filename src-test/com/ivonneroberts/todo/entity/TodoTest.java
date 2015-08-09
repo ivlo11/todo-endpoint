@@ -11,6 +11,7 @@ public class TodoTest {
 	{
 		Todo todo = new Todo("My First Task");
 		assertEquals(0, todo.getId());
+		assertEquals(0, todo.getSequence());
 		assertEquals("My First Task", todo.getMessage());
 		assertEquals(false, todo.getCompleted());
 

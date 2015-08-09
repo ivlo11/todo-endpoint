@@ -11,16 +11,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Todo {
     private static AtomicInteger nextId = new AtomicInteger();
 
-	private int id;
+	private long id;
+	private long sequence;
 	private String message;
 	private boolean completed;
 
 	public Todo(String message) {
 		id = nextId.getAndIncrement();
+		setSequence(id);
 		setMessage(message);
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -38,6 +40,14 @@ public class Todo {
 
 	public boolean getCompleted() {
 		return completed;
+	}
+
+	public long getSequence() {
+		return sequence;
+	}
+	
+	private void setSequence(long sequence) {
+		this.sequence = sequence;
 	}
 
 }
