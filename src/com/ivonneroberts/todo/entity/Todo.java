@@ -1,5 +1,7 @@
 package com.ivonneroberts.todo.entity;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * This class represents a single todo which has an id, a message
  * and a completed flag
@@ -7,18 +9,15 @@ package com.ivonneroberts.todo.entity;
  *
  */
 public class Todo {
+    private static AtomicInteger nextId = new AtomicInteger();
 
 	private int id;
 	private String message;
 	private boolean completed;
 
-	public Todo(int id, String message) {
-		setId(id);
+	public Todo(String message) {
+		id = nextId.getAndIncrement();
 		setMessage(message);
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public int getId() {
