@@ -1,6 +1,6 @@
 # todo-endpoint
 
-The goal of this project is to go through the manual steps of creating an end point withing google app engine.
+The goal of this project is to go through the manual steps of creating an end point within google app engine.
 
 Basically this endpoint has the following apis
 1. add
