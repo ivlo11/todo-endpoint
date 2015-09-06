@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.google.api.server.spi.response.NotFoundException;
 import com.ivonneroberts.todo.entity.Todo;
 
 public class TodoServiceApiTest {
@@ -22,15 +23,23 @@ public class TodoServiceApiTest {
 		assertNotNull(allTodos);
 		assertSame(todo, allTodos.get(0));
 		
-		apiTodoService.setTodoCompleted(0);
-		assertTrue(todo.getCompleted());
+		try {
+			apiTodoService.setTodoCompleted(0);
+			assertTrue(todo.getCompleted());
+		} catch (NotFoundException e) {
+			assertTrue("Todo should exist and didn't", false);
+		}
 		
 		Todo todo2 = apiTodoService.add("My Second Task");
 		allTodos = apiTodoService.getAllTodos();
 		assertEquals(2, allTodos.size());
 		assertSame(todo2, allTodos.get(1));
 
-		apiTodoService.deleteTodo(0);
+		try {
+			apiTodoService.deleteTodo(0);
+		} catch (NotFoundException e) {
+			assertTrue("Todo should exist and didn't", false);
+		}
 		allTodos = apiTodoService.getAllTodos();
 		assertSame(todo2, allTodos.get(0));
 		

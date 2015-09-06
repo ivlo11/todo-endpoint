@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.NotFoundException;
 import com.ivonneroberts.todo.entity.Todo;
 
 @Api(name="todo", version="v1", description="An api to manage basic todo")
@@ -25,7 +26,7 @@ public class TodoServiceApi {
 	}
 
 	@ApiMethod(path = "complete")
-	public Todo setTodoCompleted(@Named("id") int id) {
+	public Todo setTodoCompleted(@Named("id") int id) throws NotFoundException {
 		for(Todo todo : lstTodos)
 		{
 			if (todo.getId() == id)
@@ -34,18 +35,20 @@ public class TodoServiceApi {
 				return todo;
 			}
 		}
-		return null;
+		throw new NotFoundException("Todo does not exist");
 	}
 
 	@ApiMethod(path = "delete")
-	public void deleteTodo(@Named("id") int id) {
+	public void deleteTodo(@Named("id") int id) throws NotFoundException {
 		for(Todo todo : lstTodos)
 		{
 			if (todo.getId() == id)
 			{
 				lstTodos.remove(todo);
+				return;
 			}
 		}
+		throw new NotFoundException("Todo does not exist");
 	}
 
 }
