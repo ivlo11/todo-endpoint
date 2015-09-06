@@ -3,12 +3,15 @@ package com.ivonneroberts.todo.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.api.server.spi.config.Api;
+import com.google.api.server.spi.config.Named;
 import com.ivonneroberts.todo.entity.Todo;
 
+@Api(name="todo", version="v1", description="An api to manage basic todo")
 public class TodoServiceApi {
 	List<Todo> lstTodos = new ArrayList<Todo>();
 
-	public Todo add(String todoMessage) {
+	public Todo add(@Named("message") String todoMessage) {
 		Todo todo = new Todo(todoMessage);
 
 		lstTodos.add(todo);
@@ -19,10 +22,10 @@ public class TodoServiceApi {
 		return lstTodos;
 	}
 
-	public Todo setTodoCompleted(int i) {
+	public Todo setTodoCompleted(@Named("id") int id) {
 		for(Todo todo : lstTodos)
 		{
-			if (todo.getId() == i)
+			if (todo.getId() == id)
 			{
 				todo.setCompleted(true);
 				return todo;
@@ -31,10 +34,10 @@ public class TodoServiceApi {
 		return null;
 	}
 
-	public void deleteTodo(int i) {
+	public void deleteTodo(@Named("id") int id) {
 		for(Todo todo : lstTodos)
 		{
-			if (todo.getId() == i)
+			if (todo.getId() == id)
 			{
 				lstTodos.remove(todo);
 			}
