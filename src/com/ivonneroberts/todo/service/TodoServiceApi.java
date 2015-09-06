@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.api.server.spi.config.Api;
+import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.ivonneroberts.todo.entity.Todo;
 
@@ -18,10 +19,12 @@ public class TodoServiceApi {
 		return todo;
 	}
 
+	@ApiMethod(path = "todos")
 	public List<Todo> getAllTodos() {
 		return lstTodos;
 	}
 
+	@ApiMethod(path = "complete")
 	public Todo setTodoCompleted(@Named("id") int id) {
 		for(Todo todo : lstTodos)
 		{
@@ -34,6 +37,7 @@ public class TodoServiceApi {
 		return null;
 	}
 
+	@ApiMethod(path = "delete")
 	public void deleteTodo(@Named("id") int id) {
 		for(Todo todo : lstTodos)
 		{
