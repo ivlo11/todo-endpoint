@@ -1,6 +1,7 @@
 package com.ivonneroberts.todo.entity;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 
 /**
  * This class represents a single todo which has an id, a message
@@ -8,21 +9,23 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author ivonne
  *
  */
+@Entity
 public class Todo {
-    private static AtomicInteger nextId = new AtomicInteger();
 
-	private long id;
+    @Id private Long id;
 	private long sequence;
 	private String message;
 	private boolean completed;
 
+	public Todo() {
+		
+	}
+	
 	public Todo(String message) {
-		id = nextId.getAndIncrement();
-		setSequence(id);
 		setMessage(message);
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -46,7 +49,7 @@ public class Todo {
 		return sequence;
 	}
 	
-	private void setSequence(long sequence) {
+	public void setSequence(long sequence) {
 		this.sequence = sequence;
 	}
 

@@ -1,54 +1,55 @@
 package com.ivonneroberts.todo.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.NotFoundException;
+
+import static com.ivonneroberts.todo.OfyService.ofy;
+
 import com.ivonneroberts.todo.entity.Todo;
 
 @Api(name="todo", version="v1", description="An api to manage basic todo")
 public class TodoServiceApi {
-	List<Todo> lstTodos = new ArrayList<Todo>();
 
 	public Todo add(@Named("message") String todoMessage) {
 		Todo todo = new Todo(todoMessage);
-
-		lstTodos.add(todo);
+		ofy().save().entity(todo).now();
 		return todo;
 	}
 
 	@ApiMethod(path = "todos")
 	public List<Todo> getAllTodos() {
-		return lstTodos;
+		return ofy()
+		          .load()
+		          .type(Todo.class)
+		          .order("-__key__")
+		          .list();
 	}
 
-	@ApiMethod(path = "complete")
-	public Todo setTodoCompleted(@Named("id") int id) throws NotFoundException {
-		for(Todo todo : lstTodos)
-		{
-			if (todo.getId() == id)
-			{
-				todo.setCompleted(true);
-				return todo;
-			}
-		}
-		throw new NotFoundException("Todo does not exist");
+	@ApiMethod(path = "complete/{id}")
+	public Todo setTodoCompleted(@Named("id") Long id) throws NotFoundException {
+		Todo todo = _getTodoEntity(id);
+		todo.setCompleted(Boolean.TRUE);
+		ofy().save().entity(todo).now();
+		return todo;
 	}
 
-	@ApiMethod(path = "delete")
-	public void deleteTodo(@Named("id") int id) throws NotFoundException {
-		for(Todo todo : lstTodos)
+	@ApiMethod(path = "delete/{id}")
+	public void deleteTodo(@Named("id") Long id) throws NotFoundException{
+		Todo todo = _getTodoEntity(id);
+		ofy().delete().entity(todo).now();
+	}
+	
+	private Todo _getTodoEntity(Long id) throws NotFoundException {
+		Todo todo = ofy().load().type(Todo.class).id(id).now();
+		if (todo == null)
 		{
-			if (todo.getId() == id)
-			{
-				lstTodos.remove(todo);
-				return;
-			}
+			throw new NotFoundException("Todo does not exist");
 		}
-		throw new NotFoundException("Todo does not exist");
+		return todo;
 	}
 
 }

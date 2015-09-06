@@ -4,12 +4,38 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.google.api.server.spi.response.NotFoundException;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.appengine.api.datastore.dev.LocalDatastoreService;
+import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.util.Closeable;
 import com.ivonneroberts.todo.entity.Todo;
 
 public class TodoServiceApiTest {
+
+	private static final LocalDatastoreServiceTestConfig LOCAL_DATASTORE_SERVICE_TEST_CONFIG = new LocalDatastoreServiceTestConfig()
+			.setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL);
+	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(
+			LOCAL_DATASTORE_SERVICE_TEST_CONFIG);
+
+    Closeable session;
+
+    @Before
+    public void setUp() {
+		helper.setUp();
+        session = ObjectifyService.begin();
+    }
+
+    @After
+    public void tearDown() {
+        session.close();
+		helper.tearDown();
+    }
 
 	@Test
 	public void testTodoService()
@@ -21,10 +47,11 @@ public class TodoServiceApiTest {
 		List<Todo> allTodos = apiTodoService.getAllTodos();
 		
 		assertNotNull(allTodos);
-		assertSame(todo, allTodos.get(0));
+		Todo todoResult = allTodos.get(0);
+		assertEquals(todo.getId(), todoResult.getId());
 		
 		try {
-			apiTodoService.setTodoCompleted(0);
+			apiTodoService.setTodoCompleted(todoResult.getId());
 			assertTrue(todo.getCompleted());
 		} catch (NotFoundException e) {
 			assertTrue("Todo should exist and didn't", false);
@@ -33,15 +60,16 @@ public class TodoServiceApiTest {
 		Todo todo2 = apiTodoService.add("My Second Task");
 		allTodos = apiTodoService.getAllTodos();
 		assertEquals(2, allTodos.size());
-		assertSame(todo2, allTodos.get(1));
 
 		try {
-			apiTodoService.deleteTodo(0);
+			apiTodoService.deleteTodo(todoResult.getId());
 		} catch (NotFoundException e) {
 			assertTrue("Todo should exist and didn't", false);
 		}
 		allTodos = apiTodoService.getAllTodos();
-		assertSame(todo2, allTodos.get(0));
+		assertEquals(1, allTodos.size());
+		todoResult = allTodos.get(0);
+		assertEquals(todo2.getId(), todoResult.getId());
 		
 		/*
 		 * handle sorting alpha desc ascd, custom sequencing
