@@ -26,7 +26,7 @@ public class TodoServiceApi {
 
 	@ApiMethod(path = "todo/{message}",
 			httpMethod = "PUT")
-	public Todo add(@Named("message") String todoMessage, User user) throws OAuthRequestException {
+	public Todo create(@Named("message") String todoMessage, User user) throws OAuthRequestException {
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to add a todo");
 		}
@@ -38,7 +38,7 @@ public class TodoServiceApi {
 	}
 
 	@ApiMethod(path = "todos")
-	public List<Todo> getAllTodos(User user) throws OAuthRequestException {
+	public List<Todo> getTodos(User user) throws OAuthRequestException {
 		log.info("Getting all todos... ");
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to see todos");
@@ -53,11 +53,11 @@ public class TodoServiceApi {
 
 	@ApiMethod(path = "todo/{id}",
 			httpMethod = "POST")
-	public Todo setTodoCompleted(@Named("id") Long id, User user) throws NotFoundException, OAuthRequestException {
+	public Todo update(@Named("id") Long id, User user) throws NotFoundException, OAuthRequestException {
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to complete a todo");
 		}
-		
+
 		Todo todo = _getTodoEntity(id);
 		todo.setCompleted(Boolean.TRUE);
 		ofy().save().entity(todo).now();
@@ -66,7 +66,7 @@ public class TodoServiceApi {
 	}
 
 	@ApiMethod(path = "todo/{id}")
-	public void deleteTodo(@Named("id") Long id, User user) throws OAuthRequestException, IOException, NotFoundException{
+	public void delete(@Named("id") Long id, User user) throws OAuthRequestException, IOException, NotFoundException{
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to delete a todo");
 		}

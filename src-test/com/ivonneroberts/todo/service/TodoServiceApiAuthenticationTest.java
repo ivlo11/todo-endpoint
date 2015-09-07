@@ -48,10 +48,10 @@ public class TodoServiceApiAuthenticationTest {
 	public void testDeleteWithoutAuth() throws OAuthRequestException
 	{
 		TodoServiceApi apiTodoService = new TodoServiceApi();
-		Todo todo = apiTodoService.add("My First Task", user);
+		Todo todo = apiTodoService.create("My First Task", user);
 
 		try {
-			apiTodoService.deleteTodo(todo.getId(), null);
+			apiTodoService.delete(todo.getId(), null);
 		} catch (OAuthRequestException e) {
 			assertTrue("Only authenticated users can delete todos", true);
 		} catch (Exception e) {
@@ -65,7 +65,7 @@ public class TodoServiceApiAuthenticationTest {
 		TodoServiceApi apiTodoService = new TodoServiceApi();
 
 		try {
-			apiTodoService.add("My First Task", null);
+			apiTodoService.create("My First Task", null);
 		} catch (OAuthRequestException e) {
 			assertTrue("Only authenticated users can add todos", true);
 		} catch (Exception e) {
@@ -77,10 +77,10 @@ public class TodoServiceApiAuthenticationTest {
 	public void testCompleteWithoutAuth() throws OAuthRequestException
 	{
 		TodoServiceApi apiTodoService = new TodoServiceApi();
-		Todo todo = apiTodoService.add("My First Task", user);
+		Todo todo = apiTodoService.create("My First Task", user);
 
 		try {
-			apiTodoService.setTodoCompleted(todo.getId(), null);
+			apiTodoService.update(todo.getId(), null);
 		} catch (OAuthRequestException e) {
 			assertTrue("Only authenticated users can add todos", true);
 		} catch (Exception e) {
@@ -92,10 +92,10 @@ public class TodoServiceApiAuthenticationTest {
 	public void testReadWithoutAuth() throws OAuthRequestException
 	{
 		TodoServiceApi apiTodoService = new TodoServiceApi();
-		apiTodoService.add("My First Task", user);
+		apiTodoService.create("My First Task", user);
 
 		try {
-			apiTodoService.getAllTodos(null);
+			apiTodoService.getTodos(null);
 		} catch (OAuthRequestException e) {
 			assertTrue("Only authenticated users can add todos", true);
 		} catch (Exception e) {

@@ -53,8 +53,8 @@ public class TodoServiceApiTest {
 	public void testAddTodo() throws OAuthRequestException
 	{		
 		TodoServiceApi apiTodoService = new TodoServiceApi();
-		Todo todo = apiTodoService.add("My First Task", user);
-		List<Todo> allTodos = apiTodoService.getAllTodos(user);
+		Todo todo = apiTodoService.create("My First Task", user);
+		List<Todo> allTodos = apiTodoService.getTodos(user);
 		
 		assertNotNull(allTodos);
 		Todo todoResult = allTodos.get(0);
@@ -65,9 +65,9 @@ public class TodoServiceApiTest {
 	public void testCompleteTodo() throws OAuthRequestException, NotFoundException
 	{
 		TodoServiceApi apiTodoService = new TodoServiceApi();
-		Todo todo = apiTodoService.add("My First Task", user);
+		Todo todo = apiTodoService.create("My First Task", user);
 
-		apiTodoService.setTodoCompleted(todo.getId(), user);
+		apiTodoService.update(todo.getId(), user);
 		assertTrue(todo.getCompleted());
 	}
 	
@@ -75,10 +75,10 @@ public class TodoServiceApiTest {
 	public void testGetAllTodos() throws OAuthRequestException
 	{
 		TodoServiceApi apiTodoService = new TodoServiceApi();
-		apiTodoService.add("My First Task", user);
-		apiTodoService.add("My Second Task", user);
+		apiTodoService.create("My First Task", user);
+		apiTodoService.create("My Second Task", user);
 		
-		List<Todo> allTodos = apiTodoService.getAllTodos(user);
+		List<Todo> allTodos = apiTodoService.getTodos(user);
 		assertEquals(2, allTodos.size());
 	}
 	
@@ -86,11 +86,11 @@ public class TodoServiceApiTest {
 	public void testDeleteTodo() throws NotFoundException, OAuthRequestException, IOException
 	{
 		TodoServiceApi apiTodoService = new TodoServiceApi();
-		Todo todoFirst = apiTodoService.add("My First Task", user);
-		Todo todoSecond = apiTodoService.add("My Second Task", user);
-		apiTodoService.deleteTodo(todoFirst.getId(), user);
+		Todo todoFirst = apiTodoService.create("My First Task", user);
+		Todo todoSecond = apiTodoService.create("My Second Task", user);
+		apiTodoService.delete(todoFirst.getId(), user);
 		
-		List<Todo> allTodos = apiTodoService.getAllTodos(user);
+		List<Todo> allTodos = apiTodoService.getTodos(user);
 		assertEquals(1, allTodos.size());
 		Todo todoResult = allTodos.get(0);
 		assertEquals(todoSecond.getId(), todoResult.getId());
