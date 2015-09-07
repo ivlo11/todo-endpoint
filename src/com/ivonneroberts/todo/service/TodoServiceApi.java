@@ -1,5 +1,8 @@
 package com.ivonneroberts.todo.service;
 
+import static com.ivonneroberts.todo.OfyService.ofy;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -7,12 +10,16 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
 import com.google.api.server.spi.response.NotFoundException;
-
-import static com.ivonneroberts.todo.OfyService.ofy;
-
+import com.google.appengine.api.oauth.OAuthRequestException;
+import com.google.appengine.api.users.User;
+import com.ivonneroberts.todo.Constants;
 import com.ivonneroberts.todo.entity.Todo;
 
-@Api(name="todo", version="v1", description="An api to manage basic todo")
+@Api(name="todo", 
+	version="v1",
+    scopes = {Constants.EMAIL_SCOPE},
+    clientIds = {Constants.WEB_CLIENT_ID},
+	description="An api to manage basic todo")
 public class TodoServiceApi {
 
 	private static final Logger log = Logger.getLogger(TodoServiceApi.class.getName());
@@ -44,7 +51,11 @@ public class TodoServiceApi {
 	}
 
 	@ApiMethod(path = "delete/{id}")
-	public void deleteTodo(@Named("id") Long id) throws NotFoundException{
+	public void deleteTodo(@Named("id") Long id, User user) throws OAuthRequestException, IOException, NotFoundException{
+		if (user == null) {
+			throw new OAuthRequestException("Must be logged in to delete a todo");
+		}
+		
 		Todo todo = _getTodoEntity(id);
 		ofy().delete().entity(todo).now();
 	}
