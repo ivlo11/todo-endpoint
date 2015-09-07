@@ -24,6 +24,8 @@ public class TodoServiceApi {
 
 	private static final Logger log = Logger.getLogger(TodoServiceApi.class.getName());
 
+	@ApiMethod(path = "todo/{message}",
+			httpMethod = "PUT")
 	public Todo add(@Named("message") String todoMessage, User user) throws OAuthRequestException {
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to add a todo");
@@ -49,7 +51,8 @@ public class TodoServiceApi {
 		          .list();
 	}
 
-	@ApiMethod(path = "complete/{id}")
+	@ApiMethod(path = "todo/{id}",
+			httpMethod = "POST")
 	public Todo setTodoCompleted(@Named("id") Long id, User user) throws NotFoundException, OAuthRequestException {
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to complete a todo");
@@ -62,7 +65,7 @@ public class TodoServiceApi {
 		return todo;
 	}
 
-	@ApiMethod(path = "delete/{id}")
+	@ApiMethod(path = "todo/{id}")
 	public void deleteTodo(@Named("id") Long id, User user) throws OAuthRequestException, IOException, NotFoundException{
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to delete a todo");
