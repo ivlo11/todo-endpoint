@@ -24,7 +24,11 @@ public class TodoServiceApi {
 
 	private static final Logger log = Logger.getLogger(TodoServiceApi.class.getName());
 
-	public Todo add(@Named("message") String todoMessage) {
+	public Todo add(@Named("message") String todoMessage, User user) throws OAuthRequestException {
+		if (user == null) {
+			throw new OAuthRequestException("Must be logged in to add a todo");
+		}
+		
 		Todo todo = new Todo(todoMessage);
 		ofy().save().entity(todo).now();
 		log.info("Saved todo: " + todo.getId());
@@ -32,8 +36,12 @@ public class TodoServiceApi {
 	}
 
 	@ApiMethod(path = "todos")
-	public List<Todo> getAllTodos() {
+	public List<Todo> getAllTodos(User user) throws OAuthRequestException {
 		log.info("Getting all todos... ");
+		if (user == null) {
+			throw new OAuthRequestException("Must be logged in to see todos");
+		}
+		
 		return ofy()
 		          .load()
 		          .type(Todo.class)
@@ -42,7 +50,11 @@ public class TodoServiceApi {
 	}
 
 	@ApiMethod(path = "complete/{id}")
-	public Todo setTodoCompleted(@Named("id") Long id) throws NotFoundException {
+	public Todo setTodoCompleted(@Named("id") Long id, User user) throws NotFoundException, OAuthRequestException {
+		if (user == null) {
+			throw new OAuthRequestException("Must be logged in to complete a todo");
+		}
+		
 		Todo todo = _getTodoEntity(id);
 		todo.setCompleted(Boolean.TRUE);
 		ofy().save().entity(todo).now();
