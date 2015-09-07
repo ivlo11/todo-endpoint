@@ -7,7 +7,7 @@
   <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
   <init-param>
    <param-name>services</param-name>
-   <param-value>com.ivonneroberts.todo.service.TodoServiceApi</param-value>
+   <param-value>com.ivonneroberts.todo.service.TodoEndpoint</param-value>
   </init-param>
  </servlet>
  <filter>

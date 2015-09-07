@@ -20,9 +20,9 @@ import com.ivonneroberts.todo.entity.Todo;
     scopes = {Constants.EMAIL_SCOPE},
     clientIds = {Constants.WEB_CLIENT_ID},
 	description="An api to manage basic todo")
-public class TodoServiceApi {
+public class TodoEndpoint {
 
-	private static final Logger log = Logger.getLogger(TodoServiceApi.class.getName());
+	private static final Logger log = Logger.getLogger(TodoEndpoint.class.getName());
 
 	@ApiMethod(path = "todo/{message}",
 			httpMethod = "PUT")

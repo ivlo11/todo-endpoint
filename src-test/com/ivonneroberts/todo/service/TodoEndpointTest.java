@@ -19,7 +19,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 import com.ivonneroberts.todo.entity.Todo;
 
-public class TodoServiceApiTest {
+public class TodoEndpointTest {
 
 	private static final LocalDatastoreServiceTestConfig LOCAL_DATASTORE_SERVICE_TEST_CONFIG = new LocalDatastoreServiceTestConfig()
 			.setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL);
@@ -45,14 +45,14 @@ public class TodoServiceApiTest {
 	@Test
 	public void testTodoService()
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		assertTrue(apiTodoService != null);
 	}
 	
 	@Test
 	public void testAddTodo() throws OAuthRequestException
 	{		
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		Todo todo = apiTodoService.create("My First Task", user);
 		List<Todo> allTodos = apiTodoService.getTodos(user);
 		
@@ -64,7 +64,7 @@ public class TodoServiceApiTest {
 	@Test
 	public void testCompleteTodo() throws OAuthRequestException, NotFoundException
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		Todo todo = apiTodoService.create("My First Task", user);
 
 		apiTodoService.update(todo.getId(), user);
@@ -74,7 +74,7 @@ public class TodoServiceApiTest {
 	@Test
 	public void testGetAllTodos() throws OAuthRequestException
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		apiTodoService.create("My First Task", user);
 		apiTodoService.create("My Second Task", user);
 		
@@ -85,7 +85,7 @@ public class TodoServiceApiTest {
 	@Test
 	public void testDeleteTodo() throws NotFoundException, OAuthRequestException, IOException
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		Todo todoFirst = apiTodoService.create("My First Task", user);
 		Todo todoSecond = apiTodoService.create("My Second Task", user);
 		apiTodoService.delete(todoFirst.getId(), user);

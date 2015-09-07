@@ -15,7 +15,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 import com.ivonneroberts.todo.entity.Todo;
 
-public class TodoServiceApiAuthenticationTest {
+public class TodoEndpointAuthenticationTest {
 	
 	private static final LocalDatastoreServiceTestConfig LOCAL_DATASTORE_SERVICE_TEST_CONFIG = new LocalDatastoreServiceTestConfig()
 			.setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL);
@@ -40,14 +40,14 @@ public class TodoServiceApiAuthenticationTest {
 	@Test
 	public void testTodoService()
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		assertTrue(apiTodoService != null);
 	}
 	
 	@Test
 	public void testDeleteWithoutAuth() throws OAuthRequestException
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		Todo todo = apiTodoService.create("My First Task", user);
 
 		try {
@@ -62,7 +62,7 @@ public class TodoServiceApiAuthenticationTest {
 	@Test
 	public void testAddWithoutAuth() throws OAuthRequestException
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 
 		try {
 			apiTodoService.create("My First Task", null);
@@ -76,7 +76,7 @@ public class TodoServiceApiAuthenticationTest {
 	@Test
 	public void testCompleteWithoutAuth() throws OAuthRequestException
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		Todo todo = apiTodoService.create("My First Task", user);
 
 		try {
@@ -91,7 +91,7 @@ public class TodoServiceApiAuthenticationTest {
 	@Test
 	public void testReadWithoutAuth() throws OAuthRequestException
 	{
-		TodoServiceApi apiTodoService = new TodoServiceApi();
+		TodoEndpoint apiTodoService = new TodoEndpoint();
 		apiTodoService.create("My First Task", user);
 
 		try {
