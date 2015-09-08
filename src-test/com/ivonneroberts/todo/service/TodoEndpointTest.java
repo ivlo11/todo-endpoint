@@ -21,11 +21,15 @@ import com.ivonneroberts.todo.entity.Todo;
 
 public class TodoEndpointTest {
 
+	private static final String MY_FIRST_TASK_MESSAGE = "My First Task";
+	private static final String MY_SECOND_TASK_MESSAGE = "My Second Task";
+
 	private static final LocalDatastoreServiceTestConfig LOCAL_DATASTORE_SERVICE_TEST_CONFIG = new LocalDatastoreServiceTestConfig()
 			.setAutoIdAllocationPolicy(LocalDatastoreService.AutoIdAllocationPolicy.SEQUENTIAL);
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(
 			LOCAL_DATASTORE_SERVICE_TEST_CONFIG);
-    Closeable session;
+    
+	private Closeable session;
     
 	private final User user = new User("example@example.com", "gmail.com");
 
@@ -53,7 +57,7 @@ public class TodoEndpointTest {
 	public void testAddTodo() throws OAuthRequestException
 	{		
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create("My First Task", user);
+		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
 		List<Todo> allTodos = apiTodoService.getTodos(user);
 		
 		assertNotNull(allTodos);
@@ -65,9 +69,9 @@ public class TodoEndpointTest {
 	public void testCompleteTodo() throws OAuthRequestException, NotFoundException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create("My First Task", user);
-
-		apiTodoService.update(todo.getId(), user);
+		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
+		todo.setCompleted(true);
+		apiTodoService.update(todo.getId(), todo, user);
 		assertTrue(todo.getCompleted());
 	}
 	
@@ -75,8 +79,8 @@ public class TodoEndpointTest {
 	public void testGetAllTodos() throws OAuthRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		apiTodoService.create("My First Task", user);
-		apiTodoService.create("My Second Task", user);
+		apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
+		apiTodoService.create(MY_SECOND_TASK_MESSAGE, user);
 		
 		List<Todo> allTodos = apiTodoService.getTodos(user);
 		assertEquals(2, allTodos.size());
@@ -86,8 +90,8 @@ public class TodoEndpointTest {
 	public void testDeleteTodo() throws NotFoundException, OAuthRequestException, IOException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todoFirst = apiTodoService.create("My First Task", user);
-		Todo todoSecond = apiTodoService.create("My Second Task", user);
+		Todo todoFirst = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
+		Todo todoSecond = apiTodoService.create(MY_SECOND_TASK_MESSAGE, user);
 		apiTodoService.delete(todoFirst.getId(), user);
 		
 		List<Todo> allTodos = apiTodoService.getTodos(user);

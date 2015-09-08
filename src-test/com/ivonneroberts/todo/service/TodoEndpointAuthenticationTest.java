@@ -80,7 +80,7 @@ public class TodoEndpointAuthenticationTest {
 		Todo todo = apiTodoService.create("My First Task", user);
 
 		try {
-			apiTodoService.update(todo.getId(), null);
+			apiTodoService.update(todo.getId(), todo, null);
 		} catch (OAuthRequestException e) {
 			assertTrue("Only authenticated users can add todos", true);
 		} catch (Exception e) {

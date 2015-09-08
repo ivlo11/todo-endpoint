@@ -25,7 +25,7 @@ public class TodoEndpoint {
 	private static final Logger log = Logger.getLogger(TodoEndpoint.class.getName());
 
 	@ApiMethod(path = "todo/{message}",
-			httpMethod = "PUT")
+			httpMethod = "POST")
 	public Todo create(@Named("message") String todoMessage, User user) throws OAuthRequestException {
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to add a todo");
@@ -52,14 +52,21 @@ public class TodoEndpoint {
 	}
 
 	@ApiMethod(path = "todo/{id}",
-			httpMethod = "POST")
-	public Todo update(@Named("id") Long id, User user) throws NotFoundException, OAuthRequestException {
+			httpMethod = "PUT")
+	public Todo update(@Named("id") Long id, Todo todoInput, User user) throws NotFoundException, OAuthRequestException {
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to complete a todo");
 		}
 
 		Todo todo = _getTodoEntity(id);
-		todo.setCompleted(Boolean.TRUE);
+		String strMessage = todoInput.getMessage();
+		if (strMessage != null) {
+			todo.setMessage(strMessage);
+		}
+			
+		todo.setCompleted(todoInput.getCompleted()); //TODO: convert to wrapper to allow null
+		todo.setSequence(todoInput.getSequence()); //TODO: convert to wrapper to allow null
+		
 		ofy().save().entity(todo).now();
 		log.info("Completed todo: " + todo.getId());
 		return todo;
