@@ -63,9 +63,16 @@ public class TodoEndpoint {
 		if (strMessage != null) {
 			todo.setMessage(strMessage);
 		}
-			
-		todo.setCompleted(todoInput.getCompleted()); //TODO: convert to wrapper to allow null
-		todo.setSequence(todoInput.getSequence()); //TODO: convert to wrapper to allow null
+
+		Boolean bCompleted = todoInput.getCompleted();
+		if (bCompleted != null) {
+			todo.setCompleted(bCompleted);
+		}
+		
+		Long lSequence = todoInput.getSequence();
+		if (lSequence != null) {
+			todo.setSequence(lSequence);
+		}
 		
 		ofy().save().entity(todo).now();
 		log.info("Completed todo: " + todo.getId());

@@ -66,13 +66,39 @@ public class TodoEndpointTest {
 	}
 	
 	@Test
-	public void testCompleteTodo() throws OAuthRequestException, NotFoundException
+	public void testUpdateTodo() throws OAuthRequestException, NotFoundException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
 		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
-		todo.setCompleted(true);
-		apiTodoService.update(todo.getId(), todo, user);
-		assertTrue(todo.getCompleted());
+		
+		//
+		// Test partial update
+		//
+		Todo todoInput = new Todo();
+		todoInput.setCompleted(Boolean.TRUE);
+		
+		Todo todoUpdate = apiTodoService.update(todo.getId(), todoInput, user);
+		
+		assertTrue(todoUpdate.getCompleted());
+		assertEquals(MY_FIRST_TASK_MESSAGE, todoUpdate.getMessage());
+		assertEquals(todo.getSequence(), todoUpdate.getSequence());
+		
+		//
+		// Test full update
+		//
+		String strRenamedMessage = "Renamed First Task";
+		Long lSequence = new Long(5);
+
+		todoInput.setMessage(strRenamedMessage);
+		todoInput.setSequence(lSequence);
+		todoInput.setCompleted(Boolean.FALSE);
+
+		todoUpdate = apiTodoService.update(todo.getId(), todoInput, user);
+
+		assertFalse(todoUpdate.getCompleted());
+		assertEquals(strRenamedMessage, todoUpdate.getMessage());
+		assertEquals(lSequence, todoUpdate.getSequence());
+		
 	}
 	
 	@Test
