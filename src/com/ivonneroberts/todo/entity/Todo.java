@@ -13,16 +13,17 @@ import com.googlecode.objectify.annotation.Id;
 public class Todo {
 
     @Id private Long id;
-	private long sequence;
+	private Long sequence;
 	private String message;
-	private boolean completed;
+	private Boolean completed;
 
 	public Todo() {
-		
+		//
 	}
 	
 	public Todo(String message) {
 		setMessage(message);
+		setCompleted(Boolean.FALSE);
 	}
 
 	public Long getId() {
@@ -37,19 +38,19 @@ public class Todo {
 		return message;
 	}
 
-	public void setCompleted(boolean completed) {
+	public void setCompleted(Boolean completed) {
 		this.completed = completed;
 	}
 
-	public boolean getCompleted() {
+	public Boolean getCompleted() {
 		return completed;
 	}
 
-	public long getSequence() {
+	public Long getSequence() {
 		return sequence;
 	}
 	
-	public void setSequence(long sequence) {
+	public void setSequence(Long sequence) {
 		this.sequence = sequence;
 	}
 
