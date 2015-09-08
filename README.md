@@ -1,6 +1,6 @@
 # todo-endpoint
 
-The goal of this project is to go through the manual steps of creating an end point within google app engine.
+The goal of this project is to go through the manual steps of creating an endpoint within Google App Engine.
 
 Basically this endpoint has the following apis:
 
@@ -13,8 +13,9 @@ Basically this endpoint has the following apis:
 4. delete
  * DELETE: http://localhost:8888/_ah/api/todo/v1/todo/{id}
 
-Note: all jars were omitted from git
+**Note**: all jars were omitted from git
 
+##Getting Started##
 Once cloned and imported into Eclipse:
 
 1. Add the below jars
@@ -24,3 +25,5 @@ Once cloned and imported into Eclipse:
  * 'lib/appengine-testing.jar' (jar is in SDK directory lib/testing/)
 2. Configure build path and bound App Engine SDK to your configured SDKs (this was written with appengine-java-sdk-1.9.24 - 1.9.22)
 3. Update the Constant.java file with your Google App Engine ClientIds
+4. Run (or Debug) as a Web Application
+5. Happy Todo'ing :)
