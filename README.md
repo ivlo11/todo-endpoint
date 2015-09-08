@@ -5,8 +5,21 @@ The goal of this project is to go through the manual steps of creating an end po
 Basically this endpoint has the following apis:
 
 1. add
-2. delete
-3. complete and,
-4. get
+ * POST: http://localhost:8888/_ah/api/todo/v1/todo/{message}
+2. get
+ * GET: http://localhost:8888/_ah/api/todo/v1/todos
+3. update
+ * PUT: http://localhost:8888/_ah/api/todo/v1/todo/{id}
+4. delete
+ * DELETE: http://localhost:8888/_ah/api/todo/v1/todo/{id}
 
 Note: all jars were omitted from git
+
+Once cloned and imported into Eclipse:
+1. Add the below jars
+ 1. 'war/WEB-INF/lib/objectify-5.1.7.jar'
+ 2. 'war/WEB-INF/lib/guava-18.0.jar'
+ 3. 'lib/appengine-api-stubs.jar' (jar is in SDK directory lib/impl/)
+ 4. 'lib/appengine-testing.jar' (jar is in SDK directory lib/testing/)
+2. Configure build path and bound App Engine SDK to your configured SDKs (this was written with appengine-java-sdk-1.9.24 - 1.9.22) 
+3. Update the Constant.java file with your Google App Engine ClientIds
