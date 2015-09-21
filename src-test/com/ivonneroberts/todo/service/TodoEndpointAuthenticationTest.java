@@ -11,6 +11,7 @@ import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.util.Closeable;
 import com.ivonneroberts.todo.entity.Todo;
@@ -23,7 +24,8 @@ public class TodoEndpointAuthenticationTest {
 			LOCAL_DATASTORE_SERVICE_TEST_CONFIG);
 	Closeable session;
 
-	private final User user = new User("example@example.com", "gmail.com");
+	private final User user1 = new User("example@example.com", "gmail.com", "user1");
+	private final User user2 = new User("example@example.com", "gmail.com", "user2");
 
 	@Before
 	public void setUp() {
@@ -48,7 +50,7 @@ public class TodoEndpointAuthenticationTest {
 	public void testDeleteWithoutAuth() throws OAuthRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create("My First Task", user);
+		Todo todo = apiTodoService.create("My First Task", user1);
 
 		try {
 			apiTodoService.delete(todo.getId(), null);
@@ -77,7 +79,7 @@ public class TodoEndpointAuthenticationTest {
 	public void testCompleteWithoutAuth() throws OAuthRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create("My First Task", user);
+		Todo todo = apiTodoService.create("My First Task", user1);
 
 		try {
 			apiTodoService.update(todo.getId(), todo, null);
@@ -92,7 +94,7 @@ public class TodoEndpointAuthenticationTest {
 	public void testReadWithoutAuth() throws OAuthRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		apiTodoService.create("My First Task", user);
+		apiTodoService.create("My First Task", user1);
 
 		try {
 			apiTodoService.getTodos(null);
@@ -102,4 +104,34 @@ public class TodoEndpointAuthenticationTest {
 			assertTrue("No other exception should not occur", false);
 		}
 	}
+	
+	@Test
+	public void testReadUserTasks() throws OAuthRequestException
+	{
+		TodoEndpoint apiTodoService = new TodoEndpoint();
+		apiTodoService.create("My First Task", user1);
+		try {
+			apiTodoService.getTodos(user2);
+		} catch (NotFoundException e) {
+			assertTrue("Users can only read their todos", true);
+		} catch (Exception e) {
+			assertTrue("No other exception should not occur", false);
+		}
+	}
+	
+	@Test
+	public void testWriteToUserTasks() throws OAuthRequestException
+	{
+		TodoEndpoint apiTodoService = new TodoEndpoint();
+		Todo todo = apiTodoService.create("My First Task", user1);
+		
+		try {
+			apiTodoService.update(todo.getId(), todo, user2);
+		} catch (com.google.api.server.spi.response.NotFoundException e) {
+			assertTrue("Users can only write to their todos", true);
+		} catch (Exception e) {
+			assertTrue("No other exception should not occur", false);
+		}
+	}
+
 }

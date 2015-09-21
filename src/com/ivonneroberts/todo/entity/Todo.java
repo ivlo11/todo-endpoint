@@ -2,6 +2,7 @@ package com.ivonneroberts.todo.entity;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  * This class represents a single todo which has an id, a message
@@ -13,6 +14,7 @@ import com.googlecode.objectify.annotation.Id;
 public class Todo {
 
     @Id private Long id;
+    @Index private String userId;
 	private Long sequence;
 	private String message;
 	private Boolean completed;
@@ -21,13 +23,18 @@ public class Todo {
 		//
 	}
 	
-	public Todo(String message) {
+	public Todo(String message, String userId) {
 		setMessage(message);
 		setCompleted(Boolean.FALSE);
+		this.userId = userId; 
 	}
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getUserId() {
+		return userId;
 	}
 
 	public void setMessage(String message) {

@@ -9,7 +9,7 @@ public class TodoTest {
 	@Test
 	public void testTodo()
 	{
-		Todo todo = new Todo("My First Task");
+		Todo todo = new Todo("My First Task", "user1");
 		Long lZero = new Long(0);
 		todo.setSequence(lZero);
 		assertEquals(null, todo.getId());

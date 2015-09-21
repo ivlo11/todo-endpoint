@@ -31,7 +31,7 @@ public class TodoEndpoint {
 			throw new OAuthRequestException("Must be logged in to add a todo");
 		}
 		
-		Todo todo = new Todo(todoMessage);
+		Todo todo = new Todo(todoMessage, user.getUserId());
 		ofy().save().entity(todo).now();
 		log.info("Saved todo: " + todo.getId());
 		return todo;
@@ -47,6 +47,7 @@ public class TodoEndpoint {
 		return ofy()
 		          .load()
 		          .type(Todo.class)
+		          .filter("userId ==", user.getUserId())
 		          .order("-__key__")
 		          .list();
 	}
@@ -58,7 +59,7 @@ public class TodoEndpoint {
 			throw new OAuthRequestException("Must be logged in to complete a todo");
 		}
 
-		Todo todo = _getTodoEntity(id);
+		Todo todo = _getTodoEntity(id, user.getUserId());
 		String strMessage = todoInput.getMessage();
 		if (strMessage != null) {
 			todo.setMessage(strMessage);
@@ -85,13 +86,13 @@ public class TodoEndpoint {
 			throw new OAuthRequestException("Must be logged in to delete a todo");
 		}
 		
-		Todo todo = _getTodoEntity(id);
+		Todo todo = _getTodoEntity(id, user.getUserId());
 		ofy().delete().entity(todo).now();
 	}
 	
-	private Todo _getTodoEntity(Long id) throws NotFoundException {
-		Todo todo = ofy().load().type(Todo.class).id(id).now();
-		if (todo == null)
+	private Todo _getTodoEntity(Long id, String userId) throws NotFoundException {
+		Todo todo = ofy().load().type(Todo.class).id(id).now();		
+		if (todo == null || todo.getUserId().equals(userId) == false)
 		{
 			log.severe("Todo " + id + " does not exist!");
 			throw new NotFoundException("Todo does not exist");

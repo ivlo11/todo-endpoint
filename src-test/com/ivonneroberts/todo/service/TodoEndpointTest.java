@@ -31,7 +31,8 @@ public class TodoEndpointTest {
     
 	private Closeable session;
     
-	private final User user = new User("example@example.com", "gmail.com");
+	private final User user1 = new User("example@example.com", "gmail.com", "user1");
+	private final User user2 = new User("example@example.com", "gmail.com", "user2");
 
 
     @Before
@@ -57,8 +58,9 @@ public class TodoEndpointTest {
 	public void testAddTodo() throws OAuthRequestException
 	{		
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
-		List<Todo> allTodos = apiTodoService.getTodos(user);
+		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
+		apiTodoService.create(MY_FIRST_TASK_MESSAGE, user2);
+		List<Todo> allTodos = apiTodoService.getTodos(user1);
 		
 		assertNotNull(allTodos);
 		Todo todoResult = allTodos.get(0);
@@ -69,7 +71,7 @@ public class TodoEndpointTest {
 	public void testUpdateTodo() throws OAuthRequestException, NotFoundException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
+		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
 		
 		//
 		// Test partial update
@@ -77,7 +79,7 @@ public class TodoEndpointTest {
 		Todo todoInput = new Todo();
 		todoInput.setCompleted(Boolean.TRUE);
 		
-		Todo todoUpdate = apiTodoService.update(todo.getId(), todoInput, user);
+		Todo todoUpdate = apiTodoService.update(todo.getId(), todoInput, user1);
 		
 		assertTrue(todoUpdate.getCompleted());
 		assertEquals(MY_FIRST_TASK_MESSAGE, todoUpdate.getMessage());
@@ -93,7 +95,7 @@ public class TodoEndpointTest {
 		todoInput.setSequence(lSequence);
 		todoInput.setCompleted(Boolean.FALSE);
 
-		todoUpdate = apiTodoService.update(todo.getId(), todoInput, user);
+		todoUpdate = apiTodoService.update(todo.getId(), todoInput, user1);
 
 		assertFalse(todoUpdate.getCompleted());
 		assertEquals(strRenamedMessage, todoUpdate.getMessage());
@@ -105,10 +107,10 @@ public class TodoEndpointTest {
 	public void testGetAllTodos() throws OAuthRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
-		apiTodoService.create(MY_SECOND_TASK_MESSAGE, user);
+		apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
+		apiTodoService.create(MY_SECOND_TASK_MESSAGE, user1);
 		
-		List<Todo> allTodos = apiTodoService.getTodos(user);
+		List<Todo> allTodos = apiTodoService.getTodos(user1);
 		assertEquals(2, allTodos.size());
 	}
 	
@@ -116,11 +118,11 @@ public class TodoEndpointTest {
 	public void testDeleteTodo() throws NotFoundException, OAuthRequestException, IOException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todoFirst = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user);
-		Todo todoSecond = apiTodoService.create(MY_SECOND_TASK_MESSAGE, user);
-		apiTodoService.delete(todoFirst.getId(), user);
+		Todo todoFirst = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
+		Todo todoSecond = apiTodoService.create(MY_SECOND_TASK_MESSAGE, user1);
+		apiTodoService.delete(todoFirst.getId(), user1);
 		
-		List<Todo> allTodos = apiTodoService.getTodos(user);
+		List<Todo> allTodos = apiTodoService.getTodos(user1);
 		assertEquals(1, allTodos.size());
 		Todo todoResult = allTodos.get(0);
 		assertEquals(todoSecond.getId(), todoResult.getId());
