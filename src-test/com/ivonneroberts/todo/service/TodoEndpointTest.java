@@ -9,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
@@ -55,11 +56,13 @@ public class TodoEndpointTest {
 	}
 	
 	@Test
-	public void testAddTodo() throws OAuthRequestException
+	public void testAddTodo() throws OAuthRequestException, BadRequestException
 	{		
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
-		apiTodoService.create(MY_FIRST_TASK_MESSAGE, user2);
+		Todo todoInput = new Todo();
+		todoInput.setMessage(MY_FIRST_TASK_MESSAGE);
+		Todo todo = apiTodoService.create(todoInput, user1);
+		apiTodoService.create(todoInput, user2);
 		List<Todo> allTodos = apiTodoService.getTodos(user1);
 		
 		assertNotNull(allTodos);
@@ -68,15 +71,33 @@ public class TodoEndpointTest {
 	}
 	
 	@Test
-	public void testUpdateTodo() throws OAuthRequestException, NotFoundException
+	public void testTooLongMessage()
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage("Really long string that is over the usual 120 characters that would make apps like twitter barf and so on... something... else...");
+		
+		try {
+			apiTodoService.create(todoInput, user1);
+		} catch (BadRequestException e) {
+			assertTrue("The message string is too long", true);
+		} catch (Exception e) {
+			assertTrue("There should be no other exception", false);
+		}
+	}
+	
+	@Test
+	public void testUpdateTodo() throws OAuthRequestException, NotFoundException, BadRequestException
+	{
+		TodoEndpoint apiTodoService = new TodoEndpoint();
+		Todo todoInput = new Todo();
+		todoInput.setMessage(MY_FIRST_TASK_MESSAGE);
+		Todo todo = apiTodoService.create(todoInput, user1);
 		
 		//
 		// Test partial update
 		//
-		Todo todoInput = new Todo();
+		todoInput = new Todo();
 		todoInput.setCompleted(Boolean.TRUE);
 		
 		Todo todoUpdate = apiTodoService.update(todo.getId(), todoInput, user1);
@@ -104,22 +125,28 @@ public class TodoEndpointTest {
 	}
 	
 	@Test
-	public void testGetAllTodos() throws OAuthRequestException
+	public void testGetAllTodos() throws OAuthRequestException, BadRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
-		apiTodoService.create(MY_SECOND_TASK_MESSAGE, user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage(MY_FIRST_TASK_MESSAGE);
+		apiTodoService.create(todoInput, user1);
+		todoInput.setMessage(MY_SECOND_TASK_MESSAGE);
+		apiTodoService.create(todoInput, user1);
 		
 		List<Todo> allTodos = apiTodoService.getTodos(user1);
 		assertEquals(2, allTodos.size());
 	}
 	
 	@Test
-	public void testDeleteTodo() throws NotFoundException, OAuthRequestException, IOException
+	public void testDeleteTodo() throws NotFoundException, OAuthRequestException, IOException, BadRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todoFirst = apiTodoService.create(MY_FIRST_TASK_MESSAGE, user1);
-		Todo todoSecond = apiTodoService.create(MY_SECOND_TASK_MESSAGE, user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage(MY_FIRST_TASK_MESSAGE);
+		Todo todoFirst = apiTodoService.create(todoInput, user1);
+		todoInput.setMessage(MY_SECOND_TASK_MESSAGE);
+		Todo todoSecond = apiTodoService.create(todoInput, user1);
 		apiTodoService.delete(todoFirst.getId(), user1);
 		
 		List<Todo> allTodos = apiTodoService.getTodos(user1);

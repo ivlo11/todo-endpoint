@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.Named;
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
@@ -24,14 +25,26 @@ public class TodoEndpoint {
 
 	private static final Logger log = Logger.getLogger(TodoEndpoint.class.getName());
 
-	@ApiMethod(path = "todo/{message}",
+	//TODO move message to body since it is a post - avoid url encoding...
+	@ApiMethod(path = "todo",
 			httpMethod = "POST")
-	public Todo create(@Named("message") String todoMessage, User user) throws OAuthRequestException {
+	public Todo create(Todo todoInput, User user) throws OAuthRequestException, BadRequestException {
 		if (user == null) {
 			throw new OAuthRequestException("Must be logged in to add a todo");
 		}
 		
-		Todo todo = new Todo(todoMessage, user.getUserId());
+		if(todoInput.getMessage() == null || todoInput.getMessage().equals("") || todoInput.getMessage().length() > 120)
+		{
+			throw new BadRequestException("The todo message must be defined and be between 1 and 120 characters");
+		}
+		
+		Todo todo = new Todo(todoInput.getMessage(), user.getUserId());
+
+		Long lSequence = todoInput.getSequence();
+		if (lSequence != null) {
+			todo.setSequence(lSequence);
+		}
+		
 		ofy().save().entity(todo).now();
 		log.info("Saved todo: " + todo.getId());
 		return todo;

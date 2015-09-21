@@ -6,6 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.api.server.spi.response.BadRequestException;
 import com.google.appengine.api.datastore.dev.LocalDatastoreService;
 import com.google.appengine.api.oauth.OAuthRequestException;
 import com.google.appengine.api.users.User;
@@ -47,10 +48,12 @@ public class TodoEndpointAuthenticationTest {
 	}
 	
 	@Test
-	public void testDeleteWithoutAuth() throws OAuthRequestException
+	public void testDeleteWithoutAuth() throws OAuthRequestException, BadRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create("My First Task", user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage("My First Task");
+		Todo todo = apiTodoService.create(todoInput, user1);
 
 		try {
 			apiTodoService.delete(todo.getId(), null);
@@ -67,7 +70,9 @@ public class TodoEndpointAuthenticationTest {
 		TodoEndpoint apiTodoService = new TodoEndpoint();
 
 		try {
-			apiTodoService.create("My First Task", null);
+			Todo todoInput = new Todo();
+			todoInput.setMessage("My First Task");
+			apiTodoService.create(todoInput, null);
 		} catch (OAuthRequestException e) {
 			assertTrue("Only authenticated users can add todos", true);
 		} catch (Exception e) {
@@ -76,10 +81,12 @@ public class TodoEndpointAuthenticationTest {
 	}
 	
 	@Test
-	public void testCompleteWithoutAuth() throws OAuthRequestException
+	public void testCompleteWithoutAuth() throws OAuthRequestException, BadRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create("My First Task", user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage("My First Task");
+		Todo todo = apiTodoService.create(todoInput, user1);
 
 		try {
 			apiTodoService.update(todo.getId(), todo, null);
@@ -91,10 +98,12 @@ public class TodoEndpointAuthenticationTest {
 	}
 	
 	@Test
-	public void testReadWithoutAuth() throws OAuthRequestException
+	public void testReadWithoutAuth() throws OAuthRequestException, BadRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		apiTodoService.create("My First Task", user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage("My First Task");
+		apiTodoService.create(todoInput, user1);
 
 		try {
 			apiTodoService.getTodos(null);
@@ -106,10 +115,12 @@ public class TodoEndpointAuthenticationTest {
 	}
 	
 	@Test
-	public void testReadUserTasks() throws OAuthRequestException
+	public void testReadUserTasks() throws OAuthRequestException, BadRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		apiTodoService.create("My First Task", user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage("My First Task");
+		apiTodoService.create(todoInput, user1);
 		try {
 			apiTodoService.getTodos(user2);
 		} catch (NotFoundException e) {
@@ -120,10 +131,12 @@ public class TodoEndpointAuthenticationTest {
 	}
 	
 	@Test
-	public void testWriteToUserTasks() throws OAuthRequestException
+	public void testWriteToUserTasks() throws OAuthRequestException, BadRequestException
 	{
 		TodoEndpoint apiTodoService = new TodoEndpoint();
-		Todo todo = apiTodoService.create("My First Task", user1);
+		Todo todoInput = new Todo();
+		todoInput.setMessage("My First Task");
+		Todo todo = apiTodoService.create(todoInput, user1);
 		
 		try {
 			apiTodoService.update(todo.getId(), todo, user2);
