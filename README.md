@@ -13,17 +13,34 @@ Basically this endpoint has the following apis:
 4. delete
  * DELETE: http://localhost:8888/_ah/api/todo/v1/todo/{id}
 
-**Note**: all jars were omitted from git
-
 ##Getting Started##
-Once cloned and imported into Eclipse:
 
-1. Add the below jars
- * 'war/WEB-INF/lib/objectify-5.1.7.jar'
- * 'war/WEB-INF/lib/guava-18.0.jar'
- * 'lib/appengine-api-stubs.jar' (jar is in SDK directory lib/impl/)
- * 'lib/appengine-testing.jar' (jar is in SDK directory lib/testing/)
-2. Configure build path and bound App Engine SDK to your configured SDKs (this was written with appengine-java-sdk-1.9.24 - 1.9.22)
-3. Update the Constant.java file with your Google App Engine ClientIds
-4. Run (or Debug) as a Web Application
-5. Happy Todo'ing :)
+1. In build.gradle Define the version of GAE you want to use and your email address
+
+    ```
+    5. def appengineVersion = "1.9.24"
+    6. def appEmail = "your@email.com"
+    ```
+2. Update the Constant.java file with your Google App Engine ClientIds
+3. To run the endpoint run
+
+    ```
+    $ gradle gradle appengineRun 
+    ```
+4. To run the unit tests
+
+    ```
+    $ gradle appengineFunctionalTest 
+    ```
+
+##Using Eclipse##
+1. If you haven't already, install https://marketplace.eclipse.org/content/gradle-integration-eclipse-0
+2. Import a gradle project, and select the option to run cleanEclipse eclispe
+3. Alternatively, you can run the below within command line and then import existing project
+
+    ```
+    $ gradle cleanEclipse
+    $ gradle eclipse
+    ```
+
+###Happy Todo'ing :)###
