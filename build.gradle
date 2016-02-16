@@ -1,0 +1,64 @@
+apply plugin: 'war'
+apply plugin: 'appengine'
+apply plugin: 'eclipse'
+
+def appengineVersion = "1.9.24"
+def appEmail = "ivlo11@gmail.com"
+
+buildscript { 
+  repositories { 
+     mavenCentral()
+  } 
+  
+  dependencies {
+    classpath "com.google.appengine:gradle-appengine-plugin:1.9.24"
+  }
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+ appengineSdk "com.google.appengine:appengine-java-sdk:${appengineVersion}"
+ compile "javax.servlet:servlet-api:2.5"
+ compile "com.google.appengine:appengine-api-1.0-sdk:${appengineVersion}"
+ compile "com.google.appengine:appengine-api-labs:${appengineVersion}"
+ compile "com.google.appengine:appengine-endpoints:${appengineVersion}"
+ compile "com.google.appengine:appengine-endpoints-deps:${appengineVersion}"
+ compile 'com.googlecode.objectify:objectify:5.1.7'
+ compile 'com.google.guava:guava:18.0'
+
+    // Persistence
+    compile 'org.datanucleus:datanucleus-core:4.1.8'
+    compile 'org.datanucleus:datanucleus-jpa:2.1.8'
+    compile 'com.google.appengine.orm:datanucleus-appengine:2.1.2'
+    compile 'org.apache.geronimo.specs:geronimo-jpa_3.0_spec:1.1.1'
+    compile 'org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1'
+    compile 'javax.jdo:jdo2-api:2.3-eb'
+    compile 'net.sf.jsr107cache:jsr107cache:1.1'
+    compile "com.google.appengine:appengine-jsr107cache:${appengineVersion}"
+
+    // Testing
+    testCompile "com.google.appengine:appengine-testing:${appengineVersion}"
+    testCompile "com.google.appengine:appengine-api-stubs:${appengineVersion}"
+    testCompile 'junit:junit:4.12'
+}
+
+appengine {
+  httpPort = 8888
+  downloadSdk = true
+
+  appcfg {
+    email = "${appEmail}"
+    noCookies = true
+    oauth2 = true
+  }
+}
+
+appengineFunctionalTest {
+    // Print in console the result of test
+    afterTest { test, result ->
+        println "Executing test ${test.name} [${test.className}] with result: ${result.resultType}"
+    }
+}
