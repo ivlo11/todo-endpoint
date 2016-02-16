@@ -25,7 +25,7 @@ Basically this endpoint has the following apis:
 3. To run the endpoint run
 
     ```
-    $ gradle gradle appengineRun 
+    $ gradle appengineRun 
     ```
 4. To run the unit tests
 
