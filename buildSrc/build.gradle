@@ -1,0 +1,17 @@
+apply plugin: 'groovy'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile 'com.sun.codemodel:codemodel:2.6'
+  compile gradleApi()
+  compile localGroovy()
+}
+
+//
+//dependencies {
+//    compile 'org.codehaus.groovy:groovy:2.4.4'
+//    compile 'com.sun.codemodel:codemodel:2.6'
+//}

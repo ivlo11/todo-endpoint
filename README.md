@@ -21,16 +21,28 @@ Basically this endpoint has the following apis:
     5. def appengineVersion = "1.9.24"
     6. def appEmail = "your@email.com"
     ```
-2. Update the Constant.java file with your Google App Engine ClientIds
+2. Add a constant.properties file with your Google App Engine ClientIds
+
+    ```
+    /buildSrc/src/main/resources/com/ivonneroberts/todo/generator/constant.properties
+
+    WEB_CLIENT_ID = "1-android-apps.googleusercontent.com"
+    ANDROID_CLIENT_ID = "2-android-apps.googleusercontent.com"
+    IOS_CLIENT_ID = "3-android-apps.googleusercontent.com"
+    ANDROID_AUDIENCE = "1-android-apps.googleusercontent.com"
+    String EMAIL_SCOPE = "https://www.googleapis.com/auth/userinfo.email"
+
+    ```
+
 3. To run the endpoint run
 
     ```
-    $ gradle appengineRun 
+    $ gradle appengineRun
     ```
 4. To run the unit tests
 
     ```
-    $ gradle appengineFunctionalTest 
+    $ gradle appengineFunctionalTest
     ```
 
 ##Using Eclipse##
