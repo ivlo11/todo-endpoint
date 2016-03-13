@@ -1,3 +1,4 @@
+.DS_Store
 /bin
 /lib/appengine-api-1.0-sdk-1.9.24.jar
 /build
@@ -9,3 +10,4 @@
 /buildSrc/build
 /buildSrc/src/main/resources/com/ivonneroberts/todo/generator/constant.properties
 /src/main/java/com/ivonneroberts/todo/Constants.java
+/appengine.properties
